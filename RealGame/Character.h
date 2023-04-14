@@ -73,6 +73,7 @@ public:
     int getMaxHealth() { return maxHealth; }
     void setMaxHealth(int newValue) { maxHealth = newValue; }
     int getCurrentHealth() { return currentHealth; }
+    void heal(int amount) { currentHealth += amount; if (currentHealth > maxHealth) currentHealth = maxHealth; }
 
     //Mana
     int getMaxMana() { return maxMana; }
@@ -86,14 +87,16 @@ public:
     void setJob(std::string newJob){
         if (newJob == "Barbarian") {
             job = "Barbarian";
-            maxHealth = std::floor(maxHealth * 1.3);
+            maxHealth = 19 + rand() % 5;
             currentHealth = maxHealth;
 
-            maxMana = 0;
-            currentMana = 0;
+            maxMana = 0 + rand() % 2;
+            currentMana = maxMana;
 
             myWeapon->change(3, "Wooden Club");
             myInventory->addBombs(2 + rand()%2);
+            myInventory->addKeys(rand() % 2);
+            myInventory->addGold(rand() % 3);
             myInventory->addItem("Torch");
         }
         else if (newJob == "Arcanist") {
@@ -104,15 +107,16 @@ public:
 
             myWeapon->change(1, "Fork");
             myInventory->addGold(rand() % 6);
+            myInventory->addKeys(rand() % 2);
             myInventory->addItem("Electric Catalyst");
         }
         else {
             job = "Thief";
 
             myWeapon->change(3, "Daggers");
-            myInventory->addBombs(2);
+            myInventory->addBombs(2 + rand() % 2);
             myInventory->addGold(5 + rand() % 11);
-            myInventory->addKeys(2);
+            myInventory->addKeys(1 + rand() % 3);
             myInventory->addItem("Somebody's Empty Purse");
         }
     }
@@ -128,16 +132,37 @@ public:
 
 
 /*** FUNCTIONS ***/
+    void resetCharacter() {
+        characterName = "Traveler";
+        job = "Thief";
+        maxHealth = 15 + rand() % 4;
+        maxMana = 3;
+
+        myWeapon = new Weapon();
+        myInventory = new Inventory();
+
+        currentHealth = maxHealth;
+        currentMana = maxMana;
+    }
+
     void characChecking() {
-        std::cout << "\n|-------- " << characterName << " --------|"
+        std::cout << "|-------- " << characterName << " --------|"
             << "\n|\n| Job : " << job
             << "\n|\n| Health : " << currentHealth << "/" << maxHealth
             << "\n| Mana : " << currentMana << "/" << maxMana
-            << "\n| Weapon : " << myWeapon->weaponName << " (" << myWeapon->damage << "dmg)"
-            << "\n|\n| Bombs ~ " << getBombs()
-            << "\n| Keys ~ " << getKeys()
-            << "\n| Gold ~ " << getGold()
-            << "\n|-------------------------------------------------------";
+            << "\n|\n| ~ Inventory ~ "
+            << "\n| Weapon ~ " << myWeapon->weaponName << " (" << myWeapon->damage << "dmg)"
+            << "\n| Bombs  ~ " << getBombs()
+            << "\n| Keys   ~ " << getKeys()
+            << "\n| Gold   ~ " << getGold()
+            << "\n|\n| ~ Item List ~";
+
+        int iterator = 0;
+        for (std::string p : myInventory->uniqueItems) {
+            iterator++;
+            std::cout << "\n| '" << p << "'";
+        }
+        std::cout << "\n|--------------------------------\n\n";
     }
 
     /// <summary>

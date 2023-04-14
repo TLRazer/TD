@@ -1,9 +1,9 @@
 ﻿  RealGame.cpp
-C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\Character.h(89,35): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\Character.h(102,33): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\Character.h(105,33): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
 C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\GameManager.h(14,3): warning C4984: 'if constexpr' is a C++17 language extension
 C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\GameManager.h(12,7): message : This diagnostic occurred in the compiler generated function 'void EnemyFacade::takeDamage(enemyType &,int)'
-C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\GameManager.h(91,20): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
-C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\GameManager.h(92,19): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
-C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\GameManager.h(94,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\GameManager.h(220,20): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\GameManager.h(221,19): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\GameManager.h(223,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\GameManager.h(460,32): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
   RealGame.vcxproj -> C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\x64\Debug\RealGame.exe

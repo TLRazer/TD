@@ -5,8 +5,9 @@
 #include <time.h>
 #include "Character.h"
 #include "Enemies.h"
+#include "Weapon.h"
 
-class EnemyFacade {
+class CombatFacade {
 public:
 	template<typename enemyType>
 	void takeDamage(enemyType& enemyToDamage, int damageAmount) {
@@ -25,9 +26,36 @@ private:
 	int combatCounter = 0;
 	int enemiesSlain = 0;
 	int treasuresFound = 0;
+	int dodges = 0;
+	int spells = 0;
+	int crits = 0;
 	std::list<std::string> npcEncountered;
 
+	std::string itemPool[11] =
+	{"Secret Diary",
+	"The forbidden lyrics of Michael's last song",
+	"Well-hydrated dog",
+	"Very spicy taco",
+	"Santa's favorite bubbly drink",
+	"Magical toaster",
+	"Inedible sandwich",
+	"Sand-witch",
+	"Poster collection",
+	"Gravity-affected rock",
+	"MILK"};
+	Weapon* weaponPool[7] =
+	{	new Weapon(4,"Axe"),
+		new Weapon(3, "Sharpened butter knife"),
+		new Weapon(3, "Magical wand"),
+		new Weapon(4, "Cutlass"),
+		new Weapon(3, "Double-edged sword"),
+		new Weapon(2, "Mother Michelle's cat"),
+		new Weapon(5, "Excalibur (rock included)")
+	};
+
 	std::string dungeonName = "The Cave";
+
+	bool playerTurn = true;
 
 	Character& playerCharacter = Character::getInstance();
 
@@ -47,15 +75,24 @@ public:
 	int getEnemiesSlain() { return enemiesSlain; }
 	int getTreasuresFound() { return treasuresFound; }
 
+	/// <summary>
+	/// Resets the game variables
+	/// </summary>
 	void resetGame() {
 		playerCharacter.resetCharacter();
 		floorLevel = 0;
 		combatCounter = 0;
 		enemiesSlain = 0;
 		treasuresFound = 0;
+		dodges = 0;
+		spells = 0;
+		crits = 0;
 		npcEncountered.clear();
 	}
 
+	/// <summary>
+	/// Lowers parameters characters
+	/// </summary>
 	std::string lowercaseString(std::string text) {
 		std::string response = text;
 		std::transform(response.begin(), response.end(), response.begin(),
@@ -63,6 +100,9 @@ public:
 		return response;
 	}
 
+	/// <summary>
+	/// Ups parameters characters
+	/// </summary>
 	std::string uppercaseString(std::string text) {
 		std::string response = text;
 		std::transform(response.begin(), response.end(), response.begin(),
@@ -70,6 +110,9 @@ public:
 		return response;
 	}
 
+	/// <summary>
+	/// Capitalize parameters characters
+	/// </summary>
 	std::string capitalizeString(std::string text) {
 		std::string response = text;
 		if (response != "") {
@@ -78,7 +121,10 @@ public:
 		return response;
 	}
 
-	std::string numberSufix(int number) {
+	/// <summary>
+	/// Returns the correct suffix for written numeration
+	/// </summary>
+	std::string numbersuffix(int number) {
 		if (number % 10 == 1) {
 			return "st";
 		}
@@ -90,6 +136,9 @@ public:
 		}
 	}
 
+	/// <summary>
+	/// Asks the player to copy a specific string
+	/// </summary>
 	void userCopyInput(std::string textToDisplay, std::string textToCopy) {
 		std::string response = "";
 		bool validResponse = false;
@@ -109,6 +158,9 @@ public:
 		std::cout << "\n";
 	};
 
+	/// <summary>
+	/// Asks the player to input any string
+	/// </summary>
 	std::string userTextInput() {
 		std::string response;
 
@@ -119,6 +171,9 @@ public:
 		return response;
 	};
 
+	/// <summary>
+	/// Asks the player to input any string, displaying a text first
+	/// </summary>
 	std::string userTextInput(std::string textToDisplay) {
 		std::string response = "";
 		bool validResponse = false;
@@ -139,6 +194,9 @@ public:
 		return response;
 	};
 
+	/// <summary>
+	/// Asks the player to input a string contained in a set list of possible responses
+	/// </summary>
 	std::string userTextInput(std::string textToDisplay, std::list<std::string> possibleResponses) {
 		std::string response = "";
 		std::string possibilities = "";
@@ -172,6 +230,9 @@ public:
 		return capitalizeString(response);
 	};
 
+	/// <summary>
+	/// Asks a Yes/No question to the player
+	/// </summary>
 	bool userBoolInput(std::string textToDisplay) {
 		std::string response = "";
 		bool validResponse = false;
@@ -207,56 +268,196 @@ public:
 		}
 	};
 
+	/// <summary>
+	/// Randomly generates a dungeon name
+	/// </summary>
 	std::string dungeonNameGenerator() {
 		std::string prefix[] =
 		{"the Magnificent", "Mr. Rat's", "the Darkest",
 			"the Basic", "Magic Lord's", "the Sunken", "the High Definition"};
 
-		std::string sufix[] =
+		std::string suffix[] =
 		{ "Dungeon", "Cave", "Labyrinth",
 			"Magic Closet", "Tower", "Infinite Planes",
 			"Castle", "Forest", "Secret Hideout"};
 
 		int sizeOfPrefix = end(prefix) - begin(prefix);
-		int sizeOfSufix = end(sufix) - begin(sufix);
+		int sizeOfsuffix = end(suffix) - begin(suffix);
 
 		srand(time(NULL));
 		int random1 = rand() % (sizeOfPrefix);
-		int random2 = rand() % (sizeOfSufix);
-		return (prefix[random1]) + " " + (sufix[random2]);
+		int random2 = rand() % (sizeOfsuffix);
+		return (prefix[random1]) + " " + (suffix[random2]);
 	}
 
+	/// <summary>
+	/// Asks the player to chose a class then gives information on chosen class
+	/// </summary>
 	void classSelection() {
 		std::string selection = userTextInput("First, select your starting job :",
 			{ "Barbarian","Arcanist","Thief" });
 
+		std::cout << "\n\n" << selection << "\n\n";
+
+		if (selection == "Barbarian") {
+			std::cout << "The Barbarian is a job capable of dealing enormous damage through a generous random critical hit system, great choice"
+				<< "for a simple yet effective gameplay.\n";
+		}
+		else if (selection == "Arcanist") {
+			std::cout << "The Arcanist is a crazy dude capable of dealing massive damage through the use of various spells. Show them "
+				<< "your inner powers!\n";
+		}
+		else {
+			std::cout << "The Thief is a nimble fighter capable of dodging attacks if you guess correctly where to dodge the attack. However, "
+				<< " if you miss your dodges, you die really fast!\n";
+		}
+
 		playerCharacter.setJob(selection);
 	}
 
+	/// <summary>
+	/// Asks the player to enter his name
+	/// </summary>
 	void nameSelection() {
 		std::string selection = userTextInput("Then, enter your name :");
 		playerCharacter.setName(capitalizeString(selection));
 	}
 
+	/// <summary>
+	/// Manages weapon switch when finding a new weapon
+	/// </summary>
+	void equipNewWeapon(Weapon* newWeapon) {
+		std::cout << "[ [ You found a new weapon ! Do you wish to change your old '" << playerCharacter.getWeapon()->weaponName << "' ("
+			<< playerCharacter.getWeapon()->damage << " damage) to equip a brand new '" << newWeapon->weaponName << "' ("
+			<< newWeapon->damage << " damage) ? ] ]\n";
+		if (userBoolInput("Accept?")) {
+			playerCharacter.changeWeapon(newWeapon->damage, newWeapon->weaponName);
+			std::cout << "[ [ You equipped your new '" << newWeapon->weaponName << "'. ] ]\n";
+		}
+		else {
+			std::cout << "[ [ You left the new weapon on the floor. ] ]\n";
+		}
+	}
+
+	/// <summary>
+	/// Manages treasure loots and display
+	/// </summary>
 	void treasure() {
-		int randomGold = (rand() % 10) + 15;
+		int randomGold = (rand() % 20) + 8;
 		playerCharacter.getInventory()->addGold(randomGold);
-
-
 		std::string reward = std::to_string(randomGold) + " gold";
 
-		std::cout << "You open the treasure and found : " << reward << "\n";
+		Weapon* possibleWeapon = new Weapon();
+		int dropsWeapon = rand() % 2;
+		int dropsItem = rand() % 2;
+
+		if (dropsWeapon == 0) {
+			int lengthOfWeapons = sizeof(weaponPool)/sizeof(weaponPool[0]);
+
+			srand(time(NULL));
+			int random1 = rand() % (lengthOfWeapons);
+			possibleWeapon = weaponPool[random1];
+
+			reward = reward + " + '" + possibleWeapon->weaponName +"'";
+		}
+
+		if (dropsItem == 0) {
+			int lengthOfItems = sizeof(itemPool) / sizeof(itemPool[0]);
+
+			srand(time(NULL));
+			int random1 = rand() % (lengthOfItems);
+			std::string pickedItem = itemPool[random1];
+
+			reward = reward + " + '" + pickedItem + "'";
+			playerCharacter.getInventory()->addItem(pickedItem);
+		}
+
+
+		std::cout << "You open the treasure and found : " << reward << ".\n";
 		treasuresFound++;
+
+		if (dropsWeapon == 0) {
+			equipNewWeapon(possibleWeapon);
+		}
 	}
 
-	void combatManager() {
+	/// <summary>
+	/// Facade for character class to manage thief exceptions
+	/// </summary>
+	void combatDamage(int damageAmount) {
+		if (playerCharacter.getJob() == "Thief") {
+			int attackLocation = rand() % 3;
 
+			std::string dodgeDirection = userTextInput("How do you want to dodge the attack?", { "Left","Back","Right" });
+			if (dodgeDirection == "Left") {
+				if (attackLocation == 0) {
+					std::cout << "You dodge Left, precisely into the incoming attack! ";
+					playerCharacter.takeDamage(damageAmount);
+				}
+				else {
+					std::cout << "You dodge the incoming hit by rolling left.\n";
+					dodges++;
+				}
+			}
+			else if (dodgeDirection == "Back") {
+				if (attackLocation == 1) {
+					std::cout << "You try to step back, but still take the thrusting hit! ";
+					playerCharacter.takeDamage(damageAmount);
+				}
+				else {
+					std::cout << "You backflip gracefully, dodging the hit.\n";
+					dodges++;
+				}
+			}
+			else {
+				if (attackLocation == 2) {
+					std::cout << "You trip while turning right, eating the incoming hit! ";
+					playerCharacter.takeDamage(damageAmount);
+				}
+				else {
+					std::cout << "You jump on the wall on your right, dodging the attack.\n";
+					dodges++;
+				}
+			}
+		}
 	}
 
+	/// <summary>
+	/// General combat manager
+	/// </summary>
+	void combatManager(std::list<Enemy*> enemies) {
+		do
+		{
+			// Player turn
+			if (playerTurn) {
+				std::cout << "You attack.";
+				enemies.front()->takeDamage(playerCharacter.getWeapon()->damage);
+			}
+			// Enemy turn
+			else {
+				std::cout << "It attacks.";
+				combatDamage(enemies.front()->getAttack());
+			}
+		} while (playerCharacter.getCurrentHealth()>0 && enemies.front()->getHealth());
+	}
+
+	/// <summary>
+	/// Combat floor manager
+	/// </summary>
 	void combatFloor() {
+		playerTurn = true;
+		combatCounter++;
 
+		std::list<Enemy*> combatEnemies;
+		//TODO proper enemy generation
+		combatEnemies.push_back(new Enemy());
+
+		combatManager(combatEnemies);
 	}
 
+	/// <summary>
+	/// Dialog floor manager
+	/// </summary>
 	void dialogFloor() {
 		// Encounter random generation
 		int characterEncounter = rand() % 100;
@@ -289,7 +490,7 @@ public:
 				userTextInput();
 
 				merkat = "Merkat> I'm a merchant and should be selling you stuff right now, but I'm out of business, "
-					"due to time constraints. Please come back at a later date.\nGood luck on your aventure however!";
+					"due to time constraints. Please come back at a later date.\nGood luck on your aventure however!\n";
 
 				std::cout << merkat;
 			}
@@ -297,7 +498,7 @@ public:
 		// Cornifer
 		else if (characterEncounter <= 54) {
 			if (std::find(npcEncountered.begin(), npcEncountered.end(), "Cornifer") != npcEncountered.end()) {
-				std::cout << "Cornifer> Still in development, go on.\n";
+				std::cout << "Cornifer> Still in development, go on.\n\n";
 				if (userBoolInput("That stinks. Screw the dev.")) {
 					std::cout << "Oh, give me a break, I spent so much time on the combat system.\n";
 				}
@@ -308,7 +509,7 @@ public:
 			}
 			else {
 				npcEncountered.push_back("Cornifer");
-				std::cout << "Cornifer> Sorry dude I'm still in development, go through my floor, dude, please.\n";
+				std::cout << "Cornifer> Sorry dude I'm still in development, go through my floor, dude, please.\n\n";
 
 				if (userBoolInput("Follow Cornifer's request?")) {
 				}
@@ -320,7 +521,7 @@ public:
 		// Beelzebuth
 		else if (characterEncounter <= 69) {
 			if (std::find(npcEncountered.begin(), npcEncountered.end(), "Beelzebuth") != npcEncountered.end()) {
-				std::cout << "Beelzbuth> Oh, it's you again adventurer! Take another treasure, help yourself!\n";
+				std::cout << "Beelzbuth> Oh, it's you again adventurer! Take another treasure, help yourself!\n\n";
 				if (userBoolInput("Take the treasure?")) {
 					treasure();
 				}
@@ -332,7 +533,7 @@ public:
 				std::cout << "Before you could do anything, a giant fly stops your advancement and presents you with "
 					<< "various weapons.\n\nBeelzbuth> Good evening adventurer! What a treat to come across your path!"
 					<< " Please, take one of my treasures and go on your adventure, those wretched lands are quite "
-					<< "dangerous for a human like yourself !\n";
+					<< "dangerous for a human like yourself !\n\n";
 
 				if (userBoolInput("Take the treasure?")) {
 					treasure();
@@ -346,7 +547,7 @@ public:
 		else if (characterEncounter <= 94) {
 			if (std::find(npcEncountered.begin(), npcEncountered.end(), "Tagliatelli") != npcEncountered.end()) {
 				std::cout << "Tagliatelli> Mamma mia " << playerCharacter.getName() << "! Would you care to taste "
-					<< "another delicacy of mine ?\n";
+					<< "another delicacy of mine ?\n\n";
 
 				if (userBoolInput("Eat Tagliatelli's 'special' pasta?")) {
 					if (rand() % 2 == 0) {
@@ -370,7 +571,7 @@ public:
 				npcEncountered.push_back("Tagliatelli");
 				std::cout << "You enter this floor only to be greeeted by a large fish-man with a strong accent, happily "
 					<< "cooking pastas behind his counter.\n\nTagliatelli> Mamma mia traveler! Welcome to my kitchen!\n"
-					<< " Would you be so kind to taste my latest creation? You won't regret it, I'm sure!\n";
+					<< "Tagliatelli> Would you be so kind to taste my latest creation? You won't regret it, I'm sure!\n\n";
 
 				if (userBoolInput("Eat Tagliatelli's 'special' pasta?")) {
 					if (rand() % 2 == 0) {
@@ -474,6 +675,9 @@ public:
 		}
 	}
 
+	/// <summary>
+	/// Treasure floor manager
+	/// </summary>
 	void treasureFloor() {
 		int randomN = rand() % 3 == 0;
 		if (randomN == 0) {
@@ -512,13 +716,17 @@ public:
 		
 	}
 
+	/// <summary>
+	/// Floor progression manager
+	/// </summary>
 	void dungeonCrawler() {
 		do
 		{
 			floorLevel++;
+			playerCharacter.takeDamage(1);
 
 			std::cout << "\n\n ~ ~ " << playerCharacter.getName() << " enters the "
-				<< floorLevel << numberSufix(floorLevel) << " floor. ~ ~ \n\n";
+				<< floorLevel << numbersuffix(floorLevel) << " floor. ~ ~ \n\n";
 
 			// Floor type random generation
 			int floorType = rand() % 100;
@@ -553,9 +761,9 @@ public:
 				}
 				std::cout << playerCharacter.getName() << " continues his adventure.\n";
 			}
-			playerCharacter.takeDamage(1);
+			
 			if (playerCharacter.getCurrentHealth() > 0) {
-				std::cout << " ~ You survived another floor. ~ \n";
+				std::cout << "\n ~ ~ You survived another floor. ~ ~ \n";
 				playerCharacter.characChecking();
 				userCopyInput(" ~ Continue when ready. ~ ", "Continue");
 			}
@@ -563,6 +771,9 @@ public:
 		} while (playerCharacter.getCurrentHealth() > 0);
 	}
 
+	/// <summary>
+	/// Start of game manager
+	/// </summary>
 	void launchGame() {
 		dungeonName = dungeonNameGenerator();
 
@@ -615,14 +826,14 @@ public:
 		}
 		else if (playerCharacter.getJob() == "Arcanist") {
 			std::cout << playerCharacter.getName() << ", in a last resort, used what will be his "
-				<< " last spell.\n As he screams 'AUTO-DESTRUCTO-ZAP!', the " << floorLevel << numberSufix(floorLevel)
+				<< " last spell.\n As he screams 'AUTO-DESTRUCTO-ZAP!', the " << floorLevel << numbersuffix(floorLevel)
 				<< " floor of " << dungeonName << " bathes in a blinding light, before exploding."
 				<< "\n\nThe naive traveler finally achieved his goal, as he discovered his true power...\n\n";
 		}
 		else {
 			std::cout << playerCharacter.getName() << " could not dodge this last hit, and as his body "
 				<< "fell to the ground, all his hard-earned coins rolled from his pockets to the dungeon's "
-				<< floorLevel << numberSufix(floorLevel) << " floor.\n"
+				<< floorLevel << numbersuffix(floorLevel) << " floor.\n"
 				<< "\nHe smiles as he loses consciousness, knowing he finally finished fleeing...\n\n";
 		}
 		std::cout << " ~ ~ ~ ~ G A M E   O V E R ~ ~ ~ ~ "
@@ -636,6 +847,9 @@ public:
 
 	}
 
+	/// <summary>
+	/// Game global loop
+	/// </summary>
 	void realGame() {
 		do
 		{

@@ -19,6 +19,7 @@ public:
 
     void takeDamage(int damage) {
         currentHealth -= damage;
+        std::cout << name << " took " << damage << " damage.\n";
         if (currentHealth <= 0) {
             std::cout << name << " died!\n";
         }

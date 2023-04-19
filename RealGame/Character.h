@@ -73,7 +73,12 @@ public:
     int getMaxHealth() { return maxHealth; }
     void setMaxHealth(int newValue) { maxHealth = newValue; }
     int getCurrentHealth() { return currentHealth; }
-    void heal(int amount) { currentHealth += amount; if (currentHealth > maxHealth) currentHealth = maxHealth; }
+    void heal(int amount) { 
+        currentHealth += amount; 
+        if (currentHealth > maxHealth) 
+            currentHealth = maxHealth;
+        std::cout << "You healed " << amount << " HP.\n";
+    }
 
     //Mana
     int getMaxMana() { return maxMana; }
@@ -102,6 +107,8 @@ public:
         else if (newJob == "Arcanist") {
             job = "Arcanist";
 
+            maxHealth = 15 + rand() % 4;
+
             maxMana = std::floor(maxMana * 3);
             currentMana = maxMana;
 
@@ -112,6 +119,8 @@ public:
         }
         else {
             job = "Thief";
+
+            maxHealth = 10 + rand() % 4;
 
             myWeapon->change(3, "Daggers");
             myInventory->addBombs(2 + rand() % 2);
@@ -171,6 +180,7 @@ public:
     /// <param name="nombreDegats">number of damage received</param>
     void takeDamage(int nombreDegats) {
         this->currentHealth -= nombreDegats;
+        std::cout << "You took " << nombreDegats << " damage.\n";
 
         if (!isAlive()) {
             std::cout << "|-- Character '" << this->currentHealth << "' died --|\n";

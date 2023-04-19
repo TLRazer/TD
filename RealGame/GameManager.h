@@ -239,6 +239,13 @@ public:
 	}
 
 	void treasure() {
+		int randomGold = (rand() % 10) + 15;
+		playerCharacter.getInventory()->addGold(randomGold);
+
+
+		std::string reward = std::to_string(randomGold) + " gold";
+
+		std::cout << "You open the treasure and found : " << reward << "\n";
 		treasuresFound++;
 	}
 
@@ -290,49 +297,98 @@ public:
 		// Cornifer
 		else if (characterEncounter <= 54) {
 			if (std::find(npcEncountered.begin(), npcEncountered.end(), "Cornifer") != npcEncountered.end()) {
-				
+				std::cout << "Cornifer> Still in development, go on.\n";
+				if (userBoolInput("That stinks. Screw the dev.")) {
+					std::cout << "Oh, give me a break, I spent so much time on the combat system.\n";
+				}
+				else {
+					std::cout << "That's kind, thanks. Here's a treasure.\n";
+					treasure();
+				}
 			}
 			else {
 				npcEncountered.push_back("Cornifer");
-				std::cout << "As " << playerCharacter.getName() << "'s surprise, this floor is filled with "
-					<< "various items, all labeled with price tags. \nBefore he could make any progress, a "
-					<< " large man appears from behind a pile of junk.\n";;
+				std::cout << "Cornifer> Sorry dude I'm still in development, go through my floor, dude, please.\n";
+
+				if (userBoolInput("Follow Cornifer's request?")) {
+				}
+				else {
+					std::cout << "You don't reeally have the choice though.\n";
+				}
 			}
 		}
 		// Beelzebuth
 		else if (characterEncounter <= 69) {
 			if (std::find(npcEncountered.begin(), npcEncountered.end(), "Beelzebuth") != npcEncountered.end()) {
-
+				std::cout << "Beelzbuth> Oh, it's you again adventurer! Take another treasure, help yourself!\n";
+				if (userBoolInput("Take the treasure?")) {
+					treasure();
+				}
+				else {
+					std::cout << "You back off this suspicious offer... Who would take a treasure from a giant fly?\n";
+				}
 			}
 			else {
-				npcEncountered.push_back("Beelzebuth");
-				std::cout << "As " << playerCharacter.getName() << "'s surprise, this floor is filled with "
-					<< "various items, all labeled with price tags. \nBefore he could make any progress, a "
-					<< " large man appears from behind a pile of junk.\n";
+				std::cout << "Before you could do anything, a giant fly stops your advancement and presents you with "
+					<< "various weapons.\n\nBeelzbuth> Good evening adventurer! What a treat to come across your path!"
+					<< " Please, take one of my treasures and go on your adventure, those wretched lands are quite "
+					<< "dangerous for a human like yourself !\n";
+
+				if (userBoolInput("Take the treasure?")) {
+					treasure();
+				}
+				else {
+					std::cout << "You back off this suspicious offer... Who would take a treasure from a giant fly?\n";
+				}
 			}
 		}
 		// Tagliatelli
 		else if (characterEncounter <= 94) {
 			if (std::find(npcEncountered.begin(), npcEncountered.end(), "Tagliatelli") != npcEncountered.end()) {
-				std::cout << "Tagliatelli> Oh hi " << playerCharacter.getName() << "! As you can see, I moved "
-					<< "to this floor to better my business...\n"
-					<< "Merkat> But it has been too effective, I'm still out of stock! See you later!";
+				std::cout << "Tagliatelli> Mamma mia " << playerCharacter.getName() << "! Would you care to taste "
+					<< "another delicacy of mine ?\n";
+
+				if (userBoolInput("Eat Tagliatelli's 'special' pasta?")) {
+					if (rand() % 2 == 0) {
+						int damage = (rand() % 4) + 2;
+						std::cout << "The food tasted good, but you quickly realise it was not necessarily suited "
+							<< "for human consumption, as you stomach violently starts hurting.\n";
+						playerCharacter.takeDamage(damage);
+					}
+					else {
+						int heal = (rand() % 8) + 13;
+						std::cout << "Mamma mia! The pasta was-a very good!\n";
+						playerCharacter.heal(heal);
+					}
+				}
+				else {
+					std::cout << "The coook seems disappointed with your decision... He lets out a grunt before "
+						<< "resuming to cooking.\n";
+				}
 			}
 			else {
 				npcEncountered.push_back("Tagliatelli");
-				std::cout << "As " << playerCharacter.getName() << "'s surprise, this floor is filled with "
-					<< "various items, all labeled with price tags. \nBefore he could make any progress, a "
-					<< " large man appears from behind a pile of junk.\n";
+				std::cout << "You enter this floor only to be greeeted by a large fish-man with a strong accent, happily "
+					<< "cooking pastas behind his counter.\n\nTagliatelli> Mamma mia traveler! Welcome to my kitchen!\n"
+					<< " Would you be so kind to taste my latest creation? You won't regret it, I'm sure!\n";
 
-				std::string merkat = "\nMerkat> Oh hello there! I don't believe we've met before! Name's Merkat, "
-					"I'm just a simple dude trying to survive in this dungeon.\n";
-
-				userCopyInput(merkat, "Hello");
-
-				merkat = "Merkat> I'm a merchant and should be selling you stuff right now, but I'm out of business, "
-					"due to time constraints. Please come back at a later date.\nGood luck on your aventure however!";
-
-				std::cout << merkat;
+				if (userBoolInput("Eat Tagliatelli's 'special' pasta?")) {
+					if (rand() % 2 == 0) {
+						int damage = (rand() % 4) + 2;
+						std::cout << "The food tasted good, but you quickly realise it was not necessarily suited "
+							<< "for human consumption, as you stomach violently starts hurting.\n";
+						playerCharacter.takeDamage(damage);
+					}
+					else {
+						int heal = (rand() % 8) + 13;
+						std::cout << "Mamma mia! The pasta was-a very good!\n";
+						playerCharacter.heal(heal);
+					}
+				}
+				else {
+					std::cout << "The coook seems disappointed with your decision... He lets out a grunt before "
+						<< "resuming to cooking.\n";
+				}
 			}
 		}
 		// Leon
@@ -368,6 +424,29 @@ public:
 
 						response = userTextInput("What do you do?",
 							{ "Rob him","Take treasure","Both","Go away" });
+
+						int purseContent = 15 + rand() % 20;
+						if (lowercaseString(response) == "rob him") {
+							std::cout << "You jump towards the man equipped with your " << playerCharacter.getWeapon()->weaponName
+								<< " in hand as he screams in terror.\nBefore you could do any harm, he tosses his purse at you\n"
+								<< " and starts sobbing.\nCongrats, you just gained " << purseContent << " coins and made a "
+								<< "grown-up man cry.\n";
+						}
+						else if (lowercaseString(response) == "take treasure") {
+							std::cout << "You gladly take the offering before going on with your adventure.\n";
+							treasure();
+						}
+						else if (lowercaseString(response) == "both") {
+							std::cout << "You jump towards the man equipped with your " << playerCharacter.getWeapon()->weaponName
+								<< " in hand as he screams in terror.\nBefore you could do any harm, he tosses his purse at you\n"
+								<< " and starts sobbing.\nYou then grab his treasure before going on with your adventure.\n"
+								<< "Congrats, you just gained " << purseContent << " coins and made a "
+								<< "grown-up man cry.\n";
+							treasure();
+						}
+						else {
+
+						}
 					}
 				}
 				else {
@@ -396,7 +475,41 @@ public:
 	}
 
 	void treasureFloor() {
+		int randomN = rand() % 3 == 0;
+		if (randomN == 0) {
+			std::cout << "You enter a dark room filled with bones from previous adventurers. You are not sure anymore "
+				<< "why you entered the dungeon in the first place.\nAs you loose fate in yourself, you see a shiny object "
+				<< "reflecting light in a corner of the room. It's a treasure chest! It definitly gives you a spark of hope!\n";
 
+			if (userBoolInput("Will you open the treasure?")) {
+				std::cout << "Fortunately, this was not a trap! You take your newfound goods and leave the floor.\n";
+				treasure();
+			}
+			else {
+				std::cout << "You do not trust a treasure chest in a room full of skeletons. Sane choice.\n";
+			}
+		}
+		else if (randomN == 1) {
+			std::cout << "This floor, contrary to the rest of the dungeon, is really clean and shiny, almost heaven-like.\n"
+				<< "In the center of the room lies an opened treasure chest filled with useful stuff!\n";
+			treasure();
+			userTextInput("Neat!");
+		}
+		else {
+			std::cout << "You enter a glitched room, probably not finished by the developer.\nThere is a treasure chest "
+				<< "in the center of it, as a sign of forgiveness.\n";
+			treasure();
+
+			if (userBoolInput("Are you still mad at the developer despite the bribe?")) {
+				std::cout << "Then take this and leave!\n";
+				playerCharacter.takeDamage(1);
+			}
+			else {
+				std::cout << "You're a smart man, take another treasure for the effort.\n";
+				treasure();
+			}
+		}
+		
 	}
 
 	void dungeonCrawler() {
@@ -442,7 +555,9 @@ public:
 			}
 			playerCharacter.takeDamage(1);
 			if (playerCharacter.getCurrentHealth() > 0) {
-				userCopyInput(" ~ You survived another floor. ~ ", "Continue");
+				std::cout << " ~ You survived another floor. ~ \n";
+				playerCharacter.characChecking();
+				userCopyInput(" ~ Continue when ready. ~ ", "Continue");
 			}
 
 		} while (playerCharacter.getCurrentHealth() > 0);

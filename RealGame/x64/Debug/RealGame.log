@@ -5,5 +5,5 @@ C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\T
 C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\GameManager.h(220,20): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
 C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\GameManager.h(221,19): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
 C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\GameManager.h(223,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\GameManager.h(460,32): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\GameManager.h(549,32): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
   RealGame.vcxproj -> C:\Users\thomas.lombard\Documents\Annee 7 Travail Thomas\Cours\Prog Gameplay 2\TD\RealGame\x64\Debug\RealGame.exe

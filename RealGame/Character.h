@@ -128,6 +128,10 @@ public:
             myInventory->addKeys(1 + rand() % 3);
             myInventory->addItem("Somebody's Empty Purse");
         }
+
+        if (currentHealth > maxHealth) {
+            currentHealth = maxHealth;
+        }
     }
 
     //Items

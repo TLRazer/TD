@@ -29,6 +29,7 @@ private:
 	int dodges = 0;
 	int spells = 0;
 	int crits = 0;
+	int turnCounteer = 0;
 	std::list<std::string> npcEncountered;
 
 	std::string itemPool[11] =
@@ -381,6 +382,20 @@ public:
 		}
 	}
 
+	void combatRewards() {
+		int randomGold = (rand() % 6) + 1;
+		playerCharacter.getInventory()->addGold(randomGold);
+		std::string reward = std::to_string(randomGold) + " gold";
+
+		std::cout << "You slained all your foes and found : " << reward << ".\n";
+	}
+
+	void turnSummary(std::list<Enemy*> enemies) {
+		std::cout << "{ " << playerCharacter.getName() << " - HP: " << playerCharacter.getCurrentHealth() << "/" << playerCharacter.getMaxHealth()
+			<< "   Mana: " << playerCharacter.getCurrentMana() << "/" << playerCharacter.getMaxMana() << " }\n"
+			<< "{ " <<  enemies.front()->getName() << " - HP: " << enemies.front()->getHealth() << " left }\n";
+	}
+
 	/// <summary>
 	/// Facade for character class to manage thief exceptions
 	/// </summary>
@@ -430,15 +445,26 @@ public:
 		{
 			// Player turn
 			if (playerTurn) {
-				std::cout << "You attack.";
+				turnCounteer++;
+
+				turnSummary(enemies);
+
+				std::cout << "\nYou attack.\n";
+				userTextInput();
 				enemies.front()->takeDamage(playerCharacter.getWeapon()->damage);
 			}
 			// Enemy turn
 			else {
-				std::cout << "It attacks.";
+				std::cout << "\n"<< enemies.front()->getName() << " attacks.\n";
 				combatDamage(enemies.front()->getAttack());
 			}
-		} while (playerCharacter.getCurrentHealth()>0 && enemies.front()->getHealth());
+
+			playerTurn = !playerTurn;
+		} while (playerCharacter.getCurrentHealth()>0 && enemies.front()->getHealth()>0);
+
+		if (playerCharacter.getCurrentHealth() > 0) {
+			combatRewards();
+		}
 	}
 
 	/// <summary>
@@ -446,11 +472,14 @@ public:
 	/// </summary>
 	void combatFloor() {
 		playerTurn = true;
+		turnCounteer = 0;
 		combatCounter++;
 
 		std::list<Enemy*> combatEnemies;
 		//TODO proper enemy generation
 		combatEnemies.push_back(new Enemy());
+
+		std::cout << "You come across a dangerous " << combatEnemies.front()->getName() << " that starts attacking you!\n\n";
 
 		combatManager(combatEnemies);
 	}
@@ -723,7 +752,6 @@ public:
 		do
 		{
 			floorLevel++;
-			playerCharacter.takeDamage(1);
 
 			std::cout << "\n\n ~ ~ " << playerCharacter.getName() << " enters the "
 				<< floorLevel << numbersuffix(floorLevel) << " floor. ~ ~ \n\n";

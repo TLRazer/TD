@@ -1,5 +1,9 @@
 #pragma once
 #include <iostream>
+#include <list>
+#include <string>
+#include <time.h>
+#include <random>
 
 class Enemy {
 protected:
@@ -9,13 +13,27 @@ protected:
     int hitPercent = 0;
 
     std::string name = "DefaultEnemy";
+    std::string possibleNames[7] =
+    { "Blop", "Giant rat", "Living rock",
+        "Goblin", "Squirrel-Dragon", "Dirtpicker", "Skeleton" };
 
 public:
     int getHealth() { return currentHealth; }
     int getAttack() { return attack; }
     int getHitPercent() { return hitPercent; }
+    std::string getName() { return name; }
 
-    Enemy(){}
+    Enemy(){
+		int sizeOfNames = end(possibleNames) - begin(possibleNames);
+		srand(time(NULL));
+		int random1 = rand() % (sizeOfNames);
+        name = possibleNames[random1];
+
+        maxHealth = 9 + (rand()%5);
+        currentHealth = maxHealth;
+
+        attack = 1 + (rand() % 2);
+    }
 
     void takeDamage(int damage) {
         currentHealth -= damage;

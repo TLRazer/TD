@@ -1,0 +1,7 @@
+~ ~ REAL GAME : How to play? ~ ~
+
+You will find yourself on the entrance of a dangerous dungeon.
+
+Interact with the game by copying which action you want to take.
+
+Survive as long as you can, your statistics are displayed on Game Over.
